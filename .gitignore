@@ -3,4 +3,4 @@ out
 temp
 *.iml
 *.zip
-/main/java/demo/repository/rest/GlobalRestConstants.java
+src/main/java/demo/repository/rest/GlobalRestConstants.java
