@@ -1,0 +1,6 @@
+.idea
+out
+temp
+*.iml
+*.zip
+/main/java/demo/repository/rest/GlobalRestConstants.java
