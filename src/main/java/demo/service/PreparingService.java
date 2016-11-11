@@ -103,20 +103,22 @@ public /*TODO*/ class PreparingService {
                         continue;
                     }
 
-                    for (Style style : modelYear.getStyles()) {
-                        String styleId = style.getId();
+                    if (modelYear.getStyles() != null) {
+                        for (Style style : modelYear.getStyles()) {
+                            String styleId = style.getId();
 
-                        style = styleRepository.findOne(styleId);
-                        Property property = propertyRepository.findOne(styleId);
+                            style = styleRepository.findOne(styleId);
+                            Property property = propertyRepository.findOne(styleId);
 
-                        Vehicle vehicle = VehicleBuilder.create(style, property);
-                        if (!vehicle.isValid()) {
-                            error++;
-                            continue;
+                            Vehicle vehicle = VehicleBuilder.create(style, property);
+                            if (!vehicle.isValid()) {
+                                error++;
+                                continue;
+                            }
+
+                            total++;
+                            vehicles.add(vehicle);
                         }
-
-                        total++;
-                        vehicles.add(vehicle);
                     }
                 }
             }

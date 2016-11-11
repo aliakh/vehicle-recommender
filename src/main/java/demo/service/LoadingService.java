@@ -57,7 +57,7 @@ public /*TODO*/ class LoadingService {
         makeRepository.save(makes.getMakes());
 
         while ((counter1.get() > 0) && (counter2.get() > 0)) {
-            System.out.println("Finishing: " + counter1.get() + " / " + counter1.get());
+            System.out.println("Finishing: " + counter1.get() + " / " + counter2.get());
             sleep(1000);
         }
 
@@ -132,7 +132,7 @@ public /*TODO*/ class LoadingService {
     private void processStyles(final ModelYear modelYear) {
         for (int i = 0; i < modelYear.getStyles().size(); i++) {
             System.out.println(process.get());
-            System.out.println("Waiting: " + counter1.get() + " / " + counter1.get());
+            System.out.println("Waiting: " + counter1.get() + " / " + counter2.get());
 
             Style style = modelYear.getStyles().get(i);
             System.out.println("Read style: " + style.getId());

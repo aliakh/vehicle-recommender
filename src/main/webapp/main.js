@@ -36,7 +36,7 @@ $(document).ready(function () {
 function getMakes() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/makes",
+        url: "http://localhost:8080/target/makes",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
@@ -56,7 +56,7 @@ function getMakes() {
 function getModels(make) {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/models?make=" + make,
+        url: "http://localhost:8080/target/models?make=" + make,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
@@ -76,7 +76,7 @@ function getModels(make) {
 function getYears(make, model) {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/years?make=" + make + '&model=' + model,
+        url: "http://localhost:8080/target/years?make=" + make + '&model=' + model,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
@@ -97,7 +97,7 @@ function getYears(make, model) {
 function getStyles(make, model, year) {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/styles?make=" + make + '&model=' + model + '&year=' + year,
+        url: "http://localhost:8080/target/styles?make=" + make + '&model=' + model + '&year=' + year,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
@@ -118,7 +118,7 @@ function getStyles(make, model, year) {
 function makeMatch(styleId) {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/match?styleId=" + styleId,
+        url: "http://localhost:8080/target/match?styleId=" + styleId,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
