@@ -1,6 +1,4 @@
 .idea
-out
-temp
+.gradle
+build
 *.iml
-*.zip
-src/main/java/demo/repository/rest/GlobalRestConstants.java

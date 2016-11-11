@@ -6,7 +6,7 @@ import demo.domain.source.style.Style;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import static demo.repository.rest.GlobalRestConstants.API_KEY;
+import static demo.repository.rest.RestConstants.API_KEY;
 import static demo.repository.rest.RestConstants.API_VERSION_2_URL;
 
 @Repository
