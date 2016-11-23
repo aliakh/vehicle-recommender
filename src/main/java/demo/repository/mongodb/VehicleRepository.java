@@ -1,4 +1,4 @@
-package demo.repository;
+package demo.repository.mongodb;
 
 import demo.domain.target.Vehicle;
 import org.springframework.data.mongodb.repository.MongoRepository;

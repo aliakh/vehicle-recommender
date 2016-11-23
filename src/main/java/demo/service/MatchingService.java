@@ -3,7 +3,7 @@ package demo.service;
 import com.google.common.collect.Lists;
 import demo.domain.target.IntegerAttributeGroups;
 import demo.domain.target.Vehicle;
-import demo.repository.VehicleRepository;
+import demo.repository.mongodb.VehicleRepository;
 import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,5 @@
 package demo.service;
 
-import demo.repository.mongodb.MakeRepository;
-import demo.repository.mongodb.PropertyRepository;
-import demo.repository.mongodb.StyleRepository;
-import demo.util.Process;
-import demo.util.Timer;
 import demo.domain.VehicleFilter;
 import demo.domain.source.Make;
 import demo.domain.source.Makes;
@@ -12,8 +7,13 @@ import demo.domain.source.Model;
 import demo.domain.source.ModelYear;
 import demo.domain.source.property.Properties;
 import demo.domain.source.style.Style;
+import demo.repository.mongodb.MakeRepository;
+import demo.repository.mongodb.PropertyRepository;
+import demo.repository.mongodb.StyleRepository;
 import demo.repository.rest.AsyncRestRepository;
 import demo.repository.rest.RestRepository;
+import demo.util.Process;
+import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -130,14 +130,16 @@ public /*TODO*/ class LoadingService {
     }
 
     private void processStyles(final ModelYear modelYear) {
-        for (int i = 0; i < modelYear.getStyles().size(); i++) {
-            System.out.println(process.get());
-            System.out.println("Waiting: " + counter1.get() + " / " + counter2.get());
+        if (modelYear.getStyles() != null) {
+            for (int i = 0; i < modelYear.getStyles().size(); i++) {
+                System.out.println(process.get());
+                System.out.println("Waiting: " + counter1.get() + " / " + counter2.get());
 
-            Style style = modelYear.getStyles().get(i);
-            System.out.println("Read style: " + style.getId());
+                Style style = modelYear.getStyles().get(i);
+                System.out.println("Read style: " + style.getId());
 
-            processStyle(style.getId());
+                processStyle(style.getId());
+            }
         }
     }
 
