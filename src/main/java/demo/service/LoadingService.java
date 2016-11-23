@@ -12,6 +12,7 @@ import demo.repository.mongodb.PropertyRepository;
 import demo.repository.mongodb.StyleRepository;
 import demo.repository.rest.AsyncRestRepository;
 import demo.repository.rest.RestRepository;
+import demo.util.Delay;
 import demo.util.Process;
 import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public /*TODO*/ class LoadingService {
 
         while ((counter1.get() > 0) && (counter2.get() > 0)) {
             System.out.println("Finishing: " + counter1.get() + " / " + counter2.get());
-            sleep(1000);
+            Delay.sleep(1000);
         }
 
         timer.stop();
@@ -190,13 +191,5 @@ public /*TODO*/ class LoadingService {
                 throw new RuntimeException(t);
             }
         });
-    }
-
-    private void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
