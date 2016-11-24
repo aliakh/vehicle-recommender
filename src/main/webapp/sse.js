@@ -14,10 +14,10 @@ function initSSE() {
         eventSource.onmessage = function (e) {
             var event = JSON.parse(e.data);
             var progress = event.progress
-            var value = 100*progress.cur/progress.max;
+            var value = Math.floor(100*progress.cur/progress.max);
 
             $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value);
-            add(event);
+            add(progress.cur + " " + progress.max + " " + value);
         };
 
         eventSource.onopen = function (e) {
