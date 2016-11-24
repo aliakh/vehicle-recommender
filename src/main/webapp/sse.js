@@ -1,19 +1,14 @@
-function initSSE() {
-//$(document).ready(function () {
+$(document).ready(function () {
+  initSSE();
+  initLoadFilter();
+});
 
-    $("#load-btn").click(function () {
-        startLoad($("#filter-makes").val(), $("#filter-years").val());
-    });
+function initSSE() {
 
     if (!!window.EventSource) {
         var eventSource = new EventSource("/source/load/sse");
 
-        var elements = document.getElementById("messages");
-
         function add(message) {
-            //var element = document.createElement("li");
-            //element.innerHTML = message;
-            //elements.appendChild(element);
             console.log(message);
         }
 
@@ -25,7 +20,7 @@ function initSSE() {
             var remindedTime = progress.remindedTime;
 
             $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value).text(value + '%');;
-            add(progress.cur + " from " + progress.max + " " + value + "% " + leftTime + " ms. left " + remindedTime + " ms. reminded ");
+            add(progress.cur + " / " + progress.max + " items " + value + "% " + leftTime + " / " + remindedTime + " ms.");
         };
 
         eventSource.onopen = function (e) {
@@ -46,7 +41,12 @@ function initSSE() {
     } else {
         alert('The browser does not support Server-Sent Events');
     }
-//}
+}
+
+function initLoadFilter(makes,years) {
+    $("#load-btn").click(function () {
+        startLoad($("#filter-makes").val(), $("#filter-years").val());
+    });
 }
 
 function startLoad(makes,years) {
@@ -57,7 +57,7 @@ function startLoad(makes,years) {
         dataType: "json",
 
         success: function (data, status, jqXHR) {
-            alert("Loading completed successfully");
+            alert("Loading succeed");
         },
 
         error: function (jqXHR, status) {

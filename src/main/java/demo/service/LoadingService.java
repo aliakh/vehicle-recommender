@@ -87,7 +87,7 @@ public /*TODO*/ class LoadingService {
         makeRepository.save(makes.getMakes());
 
         while ((counter1.get() > 0) && (counter2.get() > 0)) {
-            System.out.println("Finishing: " + counter1.get() + " / " + counter2.get());
+            LOGGER.info("Finishing: " + counter1.get() + " / " + counter2.get());
             Delay.sleep(1000);
         }
 
@@ -118,10 +118,10 @@ public /*TODO*/ class LoadingService {
 
         for (int i = 0; i < makes.getMakes().size(); i++) {
             Make make = makes.getMakes().get(i);
-            System.out.println("Read make: " + make.getName());
+            LOGGER.info("Read make: " + make.getName());
 
             if (filter.skipMake(make.getName())) {
-                System.out.println("Make skipped");
+                LOGGER.info("Make skipped");
                 continue;
             }
 
@@ -134,7 +134,7 @@ public /*TODO*/ class LoadingService {
     private void processModels(VehicleFilter filter, Make make) {
         for (int i = 0; i < make.getModels().size(); i++) {
             Model model = make.getModels().get(i);
-            System.out.println("Read model: " + model.getName());
+            LOGGER.info("Read model: " + model.getName());
 
             model = restRepository.loadModel(make.getNiceName(), model.getNiceName());
             make.getModels().set(i, model);
@@ -151,10 +151,10 @@ public /*TODO*/ class LoadingService {
             sendEvent(progress);
 
             ModelYear modelYear = model.getYears().get(i);
-            System.out.println("Read year: " + modelYear.getYear());
+            LOGGER.info("Read year: " + modelYear.getYear());
 
             if (filter.skipYear(modelYear.getYear())) {
-                System.out.println("Year skipped");
+                LOGGER.info("Year skipped");
                 continue;
             }
 
@@ -165,11 +165,11 @@ public /*TODO*/ class LoadingService {
     private void processStyles(final ModelYear modelYear) {
         if (modelYear.getStyles() != null) {
             for (int i = 0; i < modelYear.getStyles().size(); i++) {
-                System.out.println(process.get());
-                System.out.println("Waiting: " + counter1.get() + " / " + counter2.get());
+                //LOGGER.info(process.get());
+                LOGGER.info("Waiting: " + counter1.get() + " / " + counter2.get());
 
                 Style style = modelYear.getStyles().get(i);
-                System.out.println("Read style: " + style.getId());
+                LOGGER.info("Read style: " + style.getId());
 
                 processStyle(style.getId());
             }
@@ -188,14 +188,14 @@ public /*TODO*/ class LoadingService {
                 Style style = response.getBody();
 
                 styleRepository.save(style);
-                System.out.println("Write style: " + style.getId());
+                LOGGER.info("Write style: " + style.getId());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 counter1.getAndDecrement();
 
-                System.out.println("Error: " + t);
+                LOGGER.info("Error: " + t);
                 throw new RuntimeException(t);
             }
         });
@@ -212,14 +212,14 @@ public /*TODO*/ class LoadingService {
                 properties.normalize();
 
                 propertyRepository.save(properties.getProperties());
-                System.out.println("Write properties: " + properties.getIds());
+                LOGGER.info("Write properties: " + properties.getIds());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 counter2.getAndDecrement();
 
-                System.out.println("Error: " + t);
+                LOGGER.info("Error: " + t);
                 throw new RuntimeException(t);
             }
         });
