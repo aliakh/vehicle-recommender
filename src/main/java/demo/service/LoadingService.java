@@ -14,10 +14,10 @@ import demo.repository.mongodb.StyleRepository;
 import demo.repository.rest.AsyncRestRepository;
 import demo.repository.rest.RestRepository;
 import demo.sse.Event;
+import demo.sse.Progress;
 import demo.util.Delay;
 import demo.util.Process;
 import demo.util.Timer;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +30,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public /*TODO*/ class LoadingService {
 
-    private final static Logger LOGGER = Logger.getLogger(LoadingService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadingService.class);
 
     @Autowired
     private RestRepository restRepository;
@@ -56,11 +59,11 @@ public /*TODO*/ class LoadingService {
         return emitter;
     }
 
-    void sendEvent() {
+    void sendEvent(Progress progress) {
         try {
-            emitter.send(new Event(), MediaType.APPLICATION_JSON);
+            emitter.send(new Event(progress), MediaType.APPLICATION_JSON);
         } catch (IOException e) {
-            LOGGER.error(e);
+            LOGGER.error("SSE sending error", e);
         }
     }
     //emitter.complete(); emitter.completeWithError(e);
@@ -69,10 +72,12 @@ public /*TODO*/ class LoadingService {
     private AtomicInteger counter2 = new AtomicInteger(0);
 
     private Process process;
+    private Progress progress;
 
     public String load(VehicleFilter filter) {
         Timer timer = new Timer("Loading");
         process = new Process(getPercentMax(filter));
+        progress = new Progress(getPercentMax(filter));
 
         makeRepository.deleteAll();
         styleRepository.deleteAll();
@@ -141,6 +146,9 @@ public /*TODO*/ class LoadingService {
     private void processModelYears(VehicleFilter filter, Model model) {
         for (int i = 0; i < model.getYears().size(); i++) {
             process.inc();
+
+            progress = progress.next();
+            sendEvent(progress);
 
             ModelYear modelYear = model.getYears().get(i);
             System.out.println("Read year: " + modelYear.getYear());

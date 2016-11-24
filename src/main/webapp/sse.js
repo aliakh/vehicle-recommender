@@ -1,17 +1,23 @@
+function initSSE() {
     if (!!window.EventSource) {
-        var eventSource = new EventSource("/sse/infinite");
+        var eventSource = new EventSource("/source/load/sse");
 
         var elements = document.getElementById("messages");
 
         function add(message) {
-            var element = document.createElement("li");
-            element.innerHTML = message;
-            elements.appendChild(element);
+            //var element = document.createElement("li");
+            //element.innerHTML = message;
+            //elements.appendChild(element);
+            console.log(message);
         }
 
         eventSource.onmessage = function (e) {
-            var message = JSON.parse(e.data);
-            add(message.text);
+            var event = JSON.parse(e.data);
+            var progress = event.progress
+            var value = 100*progress.cur/progress.max;
+
+            $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value);
+            add(event);
         };
 
         eventSource.onopen = function (e) {
@@ -32,3 +38,4 @@
     } else {
         alert('The browser does not support Server-Sent Events');
     }
+}

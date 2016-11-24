@@ -3,14 +3,15 @@ package demo.domain.target;
 import demo.domain.source.property.Property;
 import demo.domain.source.style.Style;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public /*TODO*/ class VehicleBuilder {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleBuilder.class);
+
     private static final String SPECIFICATIONS = "SPECIFICATIONS";
     private static final String EXTERIOR_DIMENSIONS = "EXTERIOR_DIMENSIONS";
-
-    private final static Logger LOGGER = Logger.getLogger(VehicleBuilder.class);
 
     public static Vehicle create(Style style, Property property) {
         Vehicle vehicle = new Vehicle();
