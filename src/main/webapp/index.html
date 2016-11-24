@@ -19,13 +19,22 @@
 
 <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
-        <!--<p>Some content.</p>-->
+        <div>
+            <p>
+                Makes
+                <input id="filter-makes" type="text">
+            </p>
+            <p>
+                Years
+                <input id="filter-years" type="text">
+            </p>
+            <p>
+                <input type="submit" value="Load">
+            </p>
+        </div>
         <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
             </div>
-        </div>
-        <div>
-            <ul id="messages"></ul>
         </div>
     </div>
     <div id="menu1" class="tab-pane fade">
@@ -43,5 +52,6 @@
 
 <script type="application/javascript">
   initSSE();
+
 </script>
 <!--https://spring.io/blog/2014/01/03/utilizing-webjars-in-spring-boot-->

@@ -18,8 +18,8 @@ function initSSE() {
             var leftTime = progress.leftTime;
             var remindedTime = progress.remindedTime;
 
-            $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value);
-            add(progress.cur + " " + progress.max + " " + value + " " + leftTime + " " + remindedTime);
+            $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value).text(value + '%');;
+            add(progress.cur + " from " + progress.max + " " + value + "% " + leftTime + " ms. left " + remindedTime + " ms. reminded ");
         };
 
         eventSource.onopen = function (e) {
