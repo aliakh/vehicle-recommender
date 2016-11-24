@@ -7,6 +7,7 @@ import demo.domain.source.Model;
 import demo.domain.source.ModelYear;
 import demo.domain.source.property.Properties;
 import demo.domain.source.style.Style;
+import demo.domain.target.VehicleBuilder;
 import demo.repository.mongodb.MakeRepository;
 import demo.repository.mongodb.PropertyRepository;
 import demo.repository.mongodb.StyleRepository;
@@ -16,6 +17,7 @@ import demo.sse.Event;
 import demo.util.Delay;
 import demo.util.Process;
 import demo.util.Timer;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +28,12 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
 
 @Service
 public /*TODO*/ class LoadingService {
 
-    private static final Logger LOGGER = Logger.getLogger(LoadingService.class);
+    private final static Logger LOGGER = Logger.getLogger(LoadingService.class);
 
     @Autowired
     private RestRepository restRepository;
