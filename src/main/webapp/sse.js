@@ -15,9 +15,11 @@ function initSSE() {
             var event = JSON.parse(e.data);
             var progress = event.progress
             var value = Math.floor(100*progress.cur/progress.max);
+            var leftTime = progress.leftTime;
+            var remindedTime = progress.remindedTime;
 
             $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value);
-            add(progress.cur + " " + progress.max + " " + value);
+            add(progress.cur + " " + progress.max + " " + value + " " + leftTime + " " + remindedTime);
         };
 
         eventSource.onopen = function (e) {

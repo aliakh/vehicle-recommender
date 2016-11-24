@@ -34,6 +34,14 @@ public class Progress {
         return startTime;
     }
 
+    public long getLeftTime() {
+        return new Date().getTime() - startTime;
+    }
+
+    public long getRemindedTime() {
+        return (long) (getLeftTime() * (((double) max / cur) - 1));
+    }
+
     public int getMax() {
         return max;
     }

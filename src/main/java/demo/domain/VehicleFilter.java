@@ -15,10 +15,10 @@ public class VehicleFilter {
     }
 
     public boolean skipMake(String make) {
-        return !this.filteredMakes.contains(make);
+        return !(this.filteredMakes.isEmpty() || this.filteredMakes.contains(make));
     }
 
     public boolean skipYear(String year) {
-        return !this.filteredYears.contains(year);
+        return !(this.filteredYears.isEmpty() || this.filteredYears.contains(year));
     }
 }
