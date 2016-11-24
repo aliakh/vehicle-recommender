@@ -5,10 +5,10 @@ import demo.service.LoadingService;
 import demo.service.PreparingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.IOException;
 
 @Controller
 public class SourceController {
@@ -24,6 +24,11 @@ public class SourceController {
     public String load(@RequestParam(value = "makes", required = false) String makes,
                        @RequestParam(value = "years", required = false) String years) {
         return loadingService.load(new VehicleFilter(makes, years));
+    }
+
+    @RequestMapping(path = "/source/load/sse", method = RequestMethod.GET)
+    public SseEmitter getEvents() {
+        return loadingService.getEvents();
     }
 
     @RequestMapping(value = "/source/prepare", method = RequestMethod.GET)

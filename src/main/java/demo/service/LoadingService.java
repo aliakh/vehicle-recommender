@@ -12,19 +12,28 @@ import demo.repository.mongodb.PropertyRepository;
 import demo.repository.mongodb.StyleRepository;
 import demo.repository.rest.AsyncRestRepository;
 import demo.repository.rest.RestRepository;
+import demo.sse.Event;
 import demo.util.Delay;
 import demo.util.Process;
 import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 @Service
 public /*TODO*/ class LoadingService {
+
+    private static final Logger LOGGER = Logger.getLogger(LoadingService.class);
 
     @Autowired
     private RestRepository restRepository;
@@ -40,6 +49,21 @@ public /*TODO*/ class LoadingService {
 
     @Autowired
     private MakeRepository makeRepository;
+
+    private final SseEmitter emitter = new SseEmitter();
+
+    public SseEmitter getEvents() {
+        return emitter;
+    }
+
+    void sendEvent() {
+        try {
+            emitter.send(new Event(), MediaType.APPLICATION_JSON);
+        } catch (IOException e) {
+            LOGGER.error(e);
+        }
+    }
+    //emitter.complete(); emitter.completeWithError(e);
 
     private AtomicInteger counter1 = new AtomicInteger(0);
     private AtomicInteger counter2 = new AtomicInteger(0);
