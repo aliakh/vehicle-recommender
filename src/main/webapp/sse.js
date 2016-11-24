@@ -1,4 +1,10 @@
 function initSSE() {
+//$(document).ready(function () {
+
+    $("#load-btn").click(function () {
+        startLoad($("#filter-makes").val(), $("#filter-years").val());
+    });
+
     if (!!window.EventSource) {
         var eventSource = new EventSource("/source/load/sse");
 
@@ -40,4 +46,22 @@ function initSSE() {
     } else {
         alert('The browser does not support Server-Sent Events');
     }
+//}
+}
+
+function startLoad(makes,years) {
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/source/load?makes="+makes+"&years="+years,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+
+        success: function (data, status, jqXHR) {
+            alert("Loading completed successfully");
+        },
+
+        error: function (jqXHR, status) {
+            alert("Loading failed: "+status);
+        }
+    });
 }
