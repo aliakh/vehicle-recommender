@@ -20,7 +20,7 @@ function initSSE() {
             var remindedTime = progress.remindedTime;
 
             $('.progress-bar').css('width', value + '%').attr('aria-valuenow', value).text(value + '%');
-            add(progress.cur + " / " + progress.max + " items " + value + "% " + formatTime(leftTime) + " / " + formatTime(remindedTime) + " min.");
+            add(progress.cur + " / " + progress.max + " items " + value + "% " + formatTime(leftTime) + " / " + formatTime(remindedTime) + " minutes");
         };
 
         eventSource.onopen = function (e) {

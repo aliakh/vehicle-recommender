@@ -17,6 +17,8 @@ import demo.repository.mongodb.VehicleRepository;
 import demo.repository.rest.RestRepository;
 import demo.util.Process;
 import demo.util.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.List;
 @Service
 public /*TODO*/ class PreparingService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PreparingService.class);
+    
     @Autowired
     private RestRepository restRepository;
 
@@ -56,8 +60,8 @@ public /*TODO*/ class PreparingService {
         timer.stop();
 
         int sec = timer.stop();
-        System.out.println("total " + total + " error " + error);
-        System.out.println("performance: " + total / sec);
+        LOGGER.info("total " + total + " error " + error);
+        LOGGER.info("performance: " + total / sec);
 
         timer = new Timer("Saving");
         vehicleRepository.save(vehicles);
@@ -89,17 +93,17 @@ public /*TODO*/ class PreparingService {
 
         for (Make make : makes) {
             if (filter.skipMake(make.getName())) {
-                System.out.println("Make skipped");
+                LOGGER.info("Make skipped");
                 continue;
             }
 
             for (Model model : make.getModels()) {
                 for (ModelYear modelYear : model.getYears()) {
                     process.inc();
-                    System.out.println(process.get());
+                    LOGGER.info(process.get());
 
                     if (filter.skipYear(modelYear.getYear())) {
-                        System.out.println("Year skipped");
+                        LOGGER.info("Year skipped");
                         continue;
                     }
 
