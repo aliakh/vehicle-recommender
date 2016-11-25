@@ -1,8 +1,7 @@
 package demo;
 
 import com.codahale.metrics.MetricRegistry;
-import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
-import demo.metrics.CodahaleMetricsAdapter;
+import demo.metrics.PublicMetricsAdapter;
 import demo.metrics.MetricNamer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.endpoint.PublicMetrics;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 //@EnableMetrics
@@ -28,11 +26,13 @@ public class Application {
     private String trimString;
 
     @Autowired
-    MetricRegistry metricsRegistry;
+    private MetricRegistry metricsRegistry;
 
     @Bean
     public PublicMetrics publicMetrics() {
         MetricNamer metricNamer = new MetricNamer(serviceName, trimString);
-        return new CodahaleMetricsAdapter(metricNamer, metricsRegistry);
+        return new PublicMetricsAdapter(metricNamer, metricsRegistry);
     }
 }
+
+// TODO http://metrics.ryantenney.com/

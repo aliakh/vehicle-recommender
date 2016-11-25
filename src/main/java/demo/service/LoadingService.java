@@ -119,7 +119,7 @@ public class LoadingService implements HealthIndicator {
         makeRepository.save(makes.getMakes());
 
         while ((counter1.get() > 0) && (counter2.get() > 0)) {
-            LOGGER.info("Finishing: " + counter1.get() + " / " + counter2.get() + " / " + errors.size());
+            LOGGER.info("Finishing: " + counter1.get() + " / " + counter2.get());
             Delay.sleep(1000);
         }
 

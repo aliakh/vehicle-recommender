@@ -19,7 +19,15 @@ public class VehicleFilter {
         return !(this.filteredMakes.isEmpty() || this.filteredMakes.contains(make));
     }
 
+    public boolean useMake(String make) {
+        return this.filteredMakes.isEmpty() || this.filteredMakes.contains(make);
+    }
+
     public boolean skipYear(String year) {
         return !(this.filteredYears.isEmpty() || this.filteredYears.contains(year));
+    }
+
+    public boolean useYear(String year) {
+        return this.filteredYears.isEmpty() || this.filteredYears.contains(year);
     }
 }

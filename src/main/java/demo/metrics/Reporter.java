@@ -1,21 +1,21 @@
-package demo;
+package demo.metrics;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 
-public class CodahaleSpringBootReporter /*implements DnsReporter*/ {
+public class Reporter /*implements DnsReporter*/ {
 
     private MetricRegistry metrics;
     private Timer lookups;
     private Counter failures;
     private Counter empties;
 
-    public CodahaleSpringBootReporter(MetricRegistry metrics) {
+    public Reporter(MetricRegistry metrics) {
         this.metrics = metrics;
-        lookups = metrics.timer(MetricRegistry.name(CodahaleSpringBootReporter.class, "srvlookup"));
-        failures = metrics.counter(MetricRegistry.name(CodahaleSpringBootReporter.class, "srvlookupfailures"));
-        empties = metrics.counter(MetricRegistry.name(CodahaleSpringBootReporter.class, "srvlookupempty"));
+        lookups = metrics.timer(MetricRegistry.name(Reporter.class, "srvlookup"));
+        failures = metrics.counter(MetricRegistry.name(Reporter.class, "srvlookupfailures"));
+        empties = metrics.counter(MetricRegistry.name(Reporter.class, "srvlookupempty"));
     }
 /*
     @Override

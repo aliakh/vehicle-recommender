@@ -6,12 +6,12 @@ import org.springframework.boot.actuate.metrics.Metric;
 
 import java.util.Collection;
 
-public class CodahaleMetricsAdapter implements PublicMetrics {
+public class PublicMetricsAdapter implements PublicMetrics {
 
 	private MetricNamer metricNamer;
 	private MetricRegistry metricRegistry;
 
-	public CodahaleMetricsAdapter(MetricNamer metricNamer, MetricRegistry metricRegistry) {
+	public PublicMetricsAdapter(MetricNamer metricNamer, MetricRegistry metricRegistry) {
 		this.metricNamer = metricNamer;
 		this.metricRegistry = metricRegistry;
 	}
@@ -21,6 +21,4 @@ public class CodahaleMetricsAdapter implements PublicMetrics {
 		MetricCollector metrics = new MetricCollector(metricNamer, metricRegistry);
 		return metrics.getMetrics();
 	}
-
-
 }
