@@ -7,7 +7,6 @@ import demo.domain.source.Model;
 import demo.domain.source.ModelYear;
 import demo.domain.source.property.Properties;
 import demo.domain.source.style.Style;
-import demo.domain.target.VehicleBuilder;
 import demo.repository.mongodb.MakeRepository;
 import demo.repository.mongodb.PropertyRepository;
 import demo.repository.mongodb.StyleRepository;
@@ -21,13 +20,14 @@ import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -53,20 +53,35 @@ public /*TODO*/ class LoadingService {
     @Autowired
     private MakeRepository makeRepository;
 
-    private final SseEmitter emitter = new SseEmitter();
+    private final SseEmitter progressEmitter = new SseEmitter();
 
-    public SseEmitter getEvents() {
-        return emitter;
+    private final SseEmitter errorEmitter = new SseEmitter();
+
+    private List<Throwable> errors;
+
+    public SseEmitter getProgressEmitter() {
+        return progressEmitter;
     }
 
-    void sendEvent(Progress progress) {
+    public SseEmitter getErrorEmitter() {
+        return errorEmitter;
+    }
+
+    void sendProgress(Progress progress) {
         try {
-            emitter.send(new Event(progress), MediaType.APPLICATION_JSON);
+            progressEmitter.send(new Event(progress), MediaType.APPLICATION_JSON);
         } catch (IOException e) {
             LOGGER.error("SSE sending error", e);
         }
     }
-    //emitter.complete(); emitter.completeWithError(e);
+
+    void sendSseError(Throwable t) {
+        try {
+            errorEmitter.send(new Error(t), MediaType.APPLICATION_JSON);
+        } catch (IOException e) {
+            LOGGER.error("SSE sending error", e);
+        }
+    }
 
     private AtomicInteger counter1 = new AtomicInteger(0);
     private AtomicInteger counter2 = new AtomicInteger(0);
@@ -74,7 +89,9 @@ public /*TODO*/ class LoadingService {
     private Process process;
     private Progress progress;
 
-    public String load(VehicleFilter filter) {
+    public boolean load(VehicleFilter filter) {
+        errors = new ArrayList<>();
+
         Timer timer = new Timer("Loading");
         process = new Process(getPercentMax(filter));
         progress = new Progress(getPercentMax(filter));
@@ -87,13 +104,14 @@ public /*TODO*/ class LoadingService {
         makeRepository.save(makes.getMakes());
 
         while ((counter1.get() > 0) && (counter2.get() > 0)) {
-            LOGGER.info("Finishing: " + counter1.get() + " / " + counter2.get());
+            LOGGER.info("Finishing: " + counter1.get() + " / " + counter2.get() + " / " + errors.size());
             Delay.sleep(1000);
         }
 
         timer.stop();
 
-        return "OK";
+        LOGGER.info("Errors count: " + errors.size());
+        return errors.isEmpty();
     }
 
     private int getPercentMax(VehicleFilter filter) {
@@ -148,7 +166,7 @@ public /*TODO*/ class LoadingService {
             process.inc();
 
             progress = progress.next();
-            sendEvent(progress);
+            sendProgress(progress);
 
             ModelYear modelYear = model.getYears().get(i);
             LOGGER.info("Read year: " + modelYear.getYear());
@@ -165,7 +183,6 @@ public /*TODO*/ class LoadingService {
     private void processStyles(final ModelYear modelYear) {
         if (modelYear.getStyles() != null) {
             for (int i = 0; i < modelYear.getStyles().size(); i++) {
-                //LOGGER.info(process.get());
                 LOGGER.info("Waiting: " + counter1.get() + " / " + counter2.get());
 
                 Style style = modelYear.getStyles().get(i);
@@ -188,15 +205,17 @@ public /*TODO*/ class LoadingService {
                 Style style = response.getBody();
 
                 styleRepository.save(style);
-                LOGGER.info("Write style: " + style.getId());
+                LOGGER.debug("Write style: " + style.getId());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 counter1.getAndDecrement();
 
-                LOGGER.info("Error: " + t);
-                throw new RuntimeException(t);
+                LOGGER.error("Error: " + t);
+
+                errors.add(t);
+                sendSseError(t);
             }
         });
 
@@ -212,16 +231,20 @@ public /*TODO*/ class LoadingService {
                 properties.normalize();
 
                 propertyRepository.save(properties.getProperties());
-                LOGGER.info("Write properties: " + properties.getIds());
+                LOGGER.debug("Write properties: " + properties.getIds());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 counter2.getAndDecrement();
 
-                LOGGER.info("Error: " + t);
-                throw new RuntimeException(t);
+                LOGGER.error("Error: " + t);
+
+                errors.add(t);
+                sendSseError(t);
             }
         });
     }
 }
+
+// TODO progressEmitter.complete(); progressEmitter.completeWithError(e);

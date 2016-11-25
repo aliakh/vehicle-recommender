@@ -8,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-
 @Controller
 public class SourceController {
 
@@ -21,14 +19,19 @@ public class SourceController {
 
     @RequestMapping(value = "/source/load", method = RequestMethod.GET)
     @ResponseBody
-    public String load(@RequestParam(value = "makes", required = false) String makes,
+    public boolean load(@RequestParam(value = "makes", required = false) String makes,
                        @RequestParam(value = "years", required = false) String years) {
         return loadingService.load(new VehicleFilter(makes, years));
     }
 
-    @RequestMapping(path = "/source/load/sse", method = RequestMethod.GET)
-    public SseEmitter getEvents() {
-        return loadingService.getEvents();
+    @RequestMapping(path = "/source/load/progress", method = RequestMethod.GET)
+    public SseEmitter getProgressEmitter() {
+        return loadingService.getProgressEmitter();
+    }
+
+    @RequestMapping(path = "/source/load/errors", method = RequestMethod.GET)
+    public SseEmitter getErrorEmitter() {
+        return loadingService.getErrorEmitter();
     }
 
     @RequestMapping(value = "/source/prepare", method = RequestMethod.GET)

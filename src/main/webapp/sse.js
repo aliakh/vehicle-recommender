@@ -6,7 +6,7 @@ $(document).ready(function () {
 function initSSE() {
 
     if (!!window.EventSource) {
-        var eventSource = new EventSource("/source/load/sse");
+        var eventSource = new EventSource("/source/load/progress");
 
         function add(message) {
             console.log(message);
@@ -21,6 +21,36 @@ function initSSE() {
 
             $('.progress-bar').css('width', value + '%').attr('aria-valuenow', value).text(value + '%');
             add(progress.cur + " / " + progress.max + " items " + value + "% " + formatTime(leftTime) + " / " + formatTime(remindedTime) + " minutes");
+        };
+
+        eventSource.onopen = function (e) {
+            add('connection was opened');
+        };
+
+        eventSource.onerror = function (e) {
+            if (e.readyState == EventSource.CONNECTING) {
+                add('event: CONNECTING');
+            } else if (e.readyState == EventSource.OPEN) {
+                add('event: OPEN');
+            } else if (e.readyState == EventSource.CLOSING) {
+                add('event: CLOSING');
+            } else if (e.readyState == EventSource.CLOSED) {
+                add('event: CLOSED');
+            }
+        };
+    } else {
+        alert('The browser does not support Server-Sent Events');
+    }
+
+    if (!!window.EventSource) {
+        var eventSource = new EventSource("/source/load/error");
+
+        function add(message) {
+            console.error(message);
+        }
+
+        eventSource.onmessage = function (e) {
+            add(e);
         };
 
         eventSource.onopen = function (e) {
