@@ -20,7 +20,7 @@ function initSSE() {
             var remindedTime = progress.remindedTime;
 
             $('.progress-bar').css('width', value+'%').attr('aria-valuenow', value).text(value + '%');;
-            add(progress.cur + " / " + progress.max + " items " + value + "% " + leftTime + " / " + remindedTime + " ms.");
+            add(progress.cur + " / " + progress.max + " items " + value + "% " + formatTime(leftTime) + " / " + formatTime(remindedTime) + " min.");
         };
 
         eventSource.onopen = function (e) {
@@ -41,6 +41,13 @@ function initSSE() {
     } else {
         alert('The browser does not support Server-Sent Events');
     }
+}
+
+function formatTime(ms) {
+  var s = Math.floor(ms/1000);
+  var m = Math.floor(s/60);
+  s -= m*60;
+  return m.toString()+":"+(s<10?"0":"")+s.toString();
 }
 
 function initLoadFilter(makes,years) {
