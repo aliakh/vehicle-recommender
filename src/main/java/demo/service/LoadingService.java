@@ -17,6 +17,8 @@ import demo.sse.Progress;
 import demo.util.Delay;
 import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public class LoadingService {
+public class LoadingService implements HealthIndicator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadingService.class);
 
@@ -56,7 +58,8 @@ public class LoadingService {
 
     private final SseEmitter errorEmitter = new SseEmitter();
 
-    private List<Throwable> errors;
+    private List<Throwable> errors = new ArrayList<>();
+    ;
 
     public SseEmitter getProgressEmitter() {
         return progressEmitter;
@@ -86,6 +89,13 @@ public class LoadingService {
     private AtomicInteger counter2 = new AtomicInteger(0);
 
     private Progress progress;
+
+    @Override
+    public Health health() {
+        return errors.isEmpty()
+                ? Health.up().build()
+                : Health.down().withDetail("Errors", errors).build();
+    }
 
     public boolean load(VehicleFilter filter) {
         errors = new ArrayList<>();
