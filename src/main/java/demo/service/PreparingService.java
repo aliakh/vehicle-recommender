@@ -15,7 +15,7 @@ import demo.repository.mongodb.PropertyRepository;
 import demo.repository.mongodb.StyleRepository;
 import demo.repository.mongodb.VehicleRepository;
 import demo.repository.rest.RestRepository;
-import demo.util.Process;
+//import demo.util.Process;
 import demo.util.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public /*TODO*/ class PreparingService {
         vehicleRepository.deleteAll();
         timer.stop();
 
-        process = new Process(getPercentMax(filter));
+//        process = new Process(getPercentMax(filter));
 
         timer = new Timer("Processing");
         List<Vehicle> vehicles = getVehicles(filter);
@@ -99,8 +99,8 @@ public /*TODO*/ class PreparingService {
 
             for (Model model : make.getModels()) {
                 for (ModelYear modelYear : model.getYears()) {
-                    process.inc();
-                    LOGGER.info(process.get());
+//                    process.inc();
+//                    LOGGER.info(process.get());
 
                     if (filter.skipYear(modelYear.getYear())) {
                         LOGGER.info("Year skipped");

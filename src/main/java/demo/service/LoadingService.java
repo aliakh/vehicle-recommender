@@ -1,5 +1,6 @@
 package demo.service;
 
+import com.codahale.metrics.MetricRegistry;
 import demo.domain.VehicleFilter;
 import demo.domain.source.Make;
 import demo.domain.source.Makes;
@@ -54,8 +55,12 @@ public class LoadingService implements HealthIndicator {
     @Autowired
     private MakeRepository makeRepository;
 
-    private final SseEmitter progressEmitter = new SseEmitter();
+    @Autowired
+    private MetricRegistry metrics;
 
+    private com.codahale.metrics.Timer lookups;
+
+    private final SseEmitter progressEmitter = new SseEmitter();
     private final SseEmitter errorEmitter = new SseEmitter();
 
     private List<Throwable> errors = new ArrayList<>();
@@ -98,6 +103,9 @@ public class LoadingService implements HealthIndicator {
     }
 
     public boolean load(VehicleFilter filter) {
+        lookups = metrics.timer(MetricRegistry.name(LoadingService.class, "load"));
+        final com.codahale.metrics.Timer.Context context = lookups.time();
+
         errors = new ArrayList<>();
 
         Timer timer = new Timer("Loading");
@@ -116,6 +124,8 @@ public class LoadingService implements HealthIndicator {
         }
 
         timer.stop();
+
+        context.stop();
 
         LOGGER.info("Errors count: " + errors.size());
         return errors.isEmpty();

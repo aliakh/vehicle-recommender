@@ -13,21 +13,22 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 
-@Configuration
 public class ApplicationConfiguration {
 
-	@Value("${service.name:unknown}")
-	private String serviceName;
 
-	@Value("${service.trimString:unknown}")
-	private String trimString;
-
-	@Autowired
-	MetricRegistry metricsRegistry;
-
+/*
 	@Bean
-	public PublicMetrics publicMetrics() {
-		MetricNamer metricNamer = new MetricNamer(serviceName, trimString);
-		return new CodahaleMetricsAdapter(metricNamer, metricsRegistry);
+	public LoadBalancer loadBalancer() {
+		LoadBalancingStrategy strategy = new RoundRobinLoadBalancingStrategy();
+
+		DnsSrvResolver resolver = DnsSrvResolvers.newBuilder()
+				.cachingLookups(true)
+				.retainingDataOnFailures(true)
+				.metered(new CodahaleSpringBootReporter(metricsRegistry))
+				.dnsLookupTimeoutMillis(1000)
+				.build();
+
+		return new LoadBalancer(strategy, resolver);
 	}
+*/
 }
