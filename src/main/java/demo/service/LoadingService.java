@@ -15,7 +15,6 @@ import demo.repository.rest.RestRepository;
 import demo.sse.Event;
 import demo.sse.Progress;
 import demo.util.Delay;
-import demo.util.Process;
 import demo.util.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public /*TODO*/ class LoadingService {
+public class LoadingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoadingService.class);
 
@@ -86,14 +85,12 @@ public /*TODO*/ class LoadingService {
     private AtomicInteger counter1 = new AtomicInteger(0);
     private AtomicInteger counter2 = new AtomicInteger(0);
 
-    private Process process;
     private Progress progress;
 
     public boolean load(VehicleFilter filter) {
         errors = new ArrayList<>();
 
         Timer timer = new Timer("Loading");
-        process = new Process(getPercentMax(filter));
         progress = new Progress(getPercentMax(filter));
 
         makeRepository.deleteAll();
@@ -163,8 +160,6 @@ public /*TODO*/ class LoadingService {
 
     private void processModelYears(VehicleFilter filter, Model model) {
         for (int i = 0; i < model.getYears().size(); i++) {
-            process.inc();
-
             progress = progress.next();
             sendProgress(progress);
 
